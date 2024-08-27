@@ -1,0 +1,32 @@
+Example in React
+Here’s a practical example using URLSearchParams to read and modify query parameters in a React component:
+UseLocation Hook is used to get path,search,hash_part parts of the url
+URLSearchParams used to get and modify serach params of URL
+
+
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+
+const QueryParamsExample = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const name = queryParams.get('name') || 'Guest';
+  const age = queryParams.get('age') || 'unknown';
+
+  const updateQuery = () => {
+    queryParams.set('name', 'Alice');
+    queryParams.set('age', '25');
+    window.history.pushState({}, '', `?${queryParams.toString()}`);
+  };
+
+  return (
+    <div>
+      <p>Name: {name}</p>
+      <p>Age: {age}</p>
+      <button onClick={updateQuery}>Update Query Parameters</button>
+    </div>
+  );
+};
+
+export default QueryParamsExample;

@@ -1,0 +1,8 @@
+which fetching in useEffect hook always use cleanup function and in cleanup function use abortController.
+
+AbortController:
+
+The AbortController is used to create an abort signal that can be passed to the fetch request. This signal can be used to cancel the fetch request if the component unmounts before the request completes.
+Cleanup Function:
+
+The return () => { controller.abort(); } statement is the cleanup function. It runs when the component unmounts or when the effect dependencies change (in this case, the id). It aborts the ongoing fetch request, preventing the state from being updated if the component is no longer mounted.

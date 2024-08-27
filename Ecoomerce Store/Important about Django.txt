@@ -1,0 +1,35 @@
+-- Include media path --
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+-- add this in urls.py for media --
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+--- when add new app add it in the apps in settings.py ----
+
+---- Use serializers for product fetching from the frontend. Serializers convert the data into complex structure. then transfer data into jSON ---------
+
+
+
+--- React axios library fetch the products and then deserialize them -------
+
+
+
+---- Also register app in the admin.py like----
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'stock', 'image','category')  //// these are for admin interface
+    search_fields = ('name',)
+
+--- Also do migrations when perform a change -----
+
+
+
+
+
+
