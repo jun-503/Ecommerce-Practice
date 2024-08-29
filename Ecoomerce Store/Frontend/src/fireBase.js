@@ -11,7 +11,7 @@ import 'firebase/compat/storage';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAvZYYeRkgtfrliheK5pgH7foME5HDk3Tk",
+  apiKey: ""
   authDomain: "e-commerce-6ad10.firebaseapp.com",
   projectId: "e-commerce-6ad10",
   storageBucket: "e-commerce-6ad10.appspot.com",
