@@ -13,15 +13,25 @@ const ProductDesc = () => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
+    const value = parseInt(e.target.value, 10);
+    setQuantity(value > 0 ? value : 1); // Ensure quantity is at least 1
   };
-
+  
   const handleAddToCart = () => {
     if (product) {
-      addItem({ ...product, quantity });
-      console.log(`Added ${quantity} of ${product.name} to cart.`);
+      const parsedQuantity = parseInt(quantity, 10);
+      if (parsedQuantity > 0) {
+        addItem({ ...product, quantity: parsedQuantity });
+        console.log(`Added ${parsedQuantity} of ${product.name} to cart.`);
+      } else {
+        alert('Quantity must be at least 1.');
+      }
     }
   };
+
+
+  
+  
 
   useEffect(() => {
     const controller = new AbortController();
@@ -35,6 +45,9 @@ const ProductDesc = () => {
         }
         const reqRes = await response.json();
         setProduct(reqRes);
+        
+        
+        
       } catch (err) {
         if (err.name !== 'AbortError') {
           setError(err.message || 'An error occurred');
@@ -63,24 +76,40 @@ const ProductDesc = () => {
         </Col>
         <Col md={6}>
           <h1>{product.name}</h1>
+          <h5>Category: {product.category}</h5>
           <p>{product.description}</p>
           <h3>${product.price}</h3>
-          <Form.Group controlId="quantity" className="quantity-selector">
-            <Form.Label>Quantity</Form.Label>
-            <Form.Control
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              min="1"
-            />
-          </Form.Group>
-          <Button
-            variant="primary"
-            className="add-to-cart-button mt-5"
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </Button>
+          {product.stock > 0 ? (
+            
+              <>
+              <p className='text-success'>In Stock</p>
+              <p>Available Quantity: {product.stock}</p>
+              <Form.Group controlId="quantity" className="quantity-selector">
+                <Form.Label>Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  min="1"
+                />
+              </Form.Group>
+              <Button
+                variant="primary"
+                className="add-to-cart-button mt-5"
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </Button>
+
+              </>
+              
+
+            
+          ) : (
+            <p className='text-danger'>Out of Stock</p>
+          )}
+          
+
         </Col>
       </Row>
     </Container>

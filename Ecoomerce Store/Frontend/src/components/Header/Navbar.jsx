@@ -1,84 +1,136 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Nav, Navbar, NavDropdown, Form, Button, NavItem } from 'react-bootstrap';
+import { Container, Nav, Navbar, NavDropdown, Form, Button, Badge } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NavBar.css'; // Assuming you have a NavBar.css for custom styles
 import { useAuth } from '../../Context/AuthContext';
-import {useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useCart } from 'react-use-cart';
+
 
 function NavBar() {
   const navigate = useNavigate();
   const { currentUser, signOut } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = React.useState(!!currentUser);
-  const [searchQuery,setSearchQuery] = useState('')
+  const { isEmpty, totalUniqueItems, emptyCart } = useCart();
+  const [isAuthenticated, setIsAuthenticated] = useState(!!currentUser);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setIsAuthenticated(!!currentUser);
   }, [currentUser]);
 
   const handleLogout = () => {
-    Cookies.remove('idToken') // Clear the cookie
-
+    // Clear local storage related to the cart
+    localStorage.removeItem('react-use-cart');
+    localStorage.removeItem('react-use-cart-ecommerce-cart');
+    
+    // Clear the cart state from the context
+    emptyCart();
+    
+    // Clear the cookie
+    Cookies.remove('idToken');
+    
+    // Perform sign-out
     signOut();
+    
+    // Redirect to home
     navigate('/');
   };
-  const handleSearch =(e) =>{
-    e.preventDefault()
-    if (searchQuery.trim()){
-      navigate(`/search?q=${searchQuery}`)
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${searchQuery}`);
     }
   };
-  const handleSortChange= (sortOption) => {
-  alert('Not implemented yet')
-  }
+
+  const handleSortChange = (sortOption) => {
+    // Logic to handle sorting
+    console.log(`Sorting by ${sortOption}`);
+    // Add your sorting logic here (update the product list accordingly)
+  };
 
   const handleSelect = (eventKey) => {
-    // Navigate to the selected category
     navigate(`/products/${eventKey}`);
   };
 
+  const handleCartClick = () => {
+    navigate('/cart');
+  };
+
   return (
-    <Navbar expand="sm" className="bg-body-tertiary navbar-custom" fixed="top">
-      <Container>
-        <Navbar.Brand href="/">Metro Mart</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+    <Navbar expand="lg" className="navbar-custom shadow-sm p-3 mb-5 bg-dark text-light" fixed="top">
+      <Container fluid>
+        <Navbar.Brand href="/" className="text-light fw-bold fs-4">Metro Mart</Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbar-content" />
+        <Navbar.Collapse id="navbar-content">
           <Nav className="me-auto">
-            <Nav.Link >Products</Nav.Link>
-            <NavDropdown title="Sort By" id="sort-nav-dropdown" >
-              <NavDropdown.Item onClick={()=>handleSortChange('name')} >Name</NavDropdown.Item>
-              <NavDropdown.Item onClick={()=>handleSortChange('price-asc')} >Price-Asc</NavDropdown.Item>
-              <NavDropdown.Item onClick={()=>handleSortChange('price-desc')} >Price-Desc</NavDropdown.Item>
+            <Nav.Link href="/" className="text-light">Home</Nav.Link>
+            <Nav.Link href="/products" className="text-light">Products</Nav.Link>
+
+            {/* Sort By Dropdown */}
+            <NavDropdown title="Sort By" id="sort-nav-dropdown" className="text-light">
+              <NavDropdown.Item onClick={() => handleSortChange('name')}>Name</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => handleSortChange('price-asc')}>Price: Low to High</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => handleSortChange('price-desc')}>Price: High to Low</NavDropdown.Item>
             </NavDropdown>
-            <NavDropdown title="Categories" id="basic-nav-dropdown" onSelect={handleSelect}>
+
+            {/* Categories Dropdown */}
+            <NavDropdown title="Categories" id="categories-nav-dropdown" onSelect={handleSelect} className="text-light">
               <NavDropdown.Item eventKey="Mobiles">Mobiles</NavDropdown.Item>
               <NavDropdown.Item eventKey="Clothing">Clothing</NavDropdown.Item>
               <NavDropdown.Item eventKey="Appliances">Appliances</NavDropdown.Item>
               <NavDropdown.Item eventKey="Grocery">Grocery</NavDropdown.Item>
               <NavDropdown.Item eventKey="Laptop">Laptop</NavDropdown.Item>
-
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">All products</NavDropdown.Item>
+              <NavDropdown.Item eventKey="all-products">All Products</NavDropdown.Item>
             </NavDropdown>
           </Nav>
-          {isAuthenticated ? (
-            <NavDropdown title={currentUser ? currentUser.email : 'user'} id="user-nav-dropdown">
-              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-            </NavDropdown>
-          ) : (
-            <Button variant="outline-primary" onClick={() => navigate('/signIn')}>Sign In</Button>
-          )}
-          <Form className="d-flex">
+
+          {/* Search Form */}
+          <Form className="d-flex mx-auto w-50" onSubmit={handleSearch}>
             <Form.Control
               type="search"
-              placeholder="Search"
-              className="me-2"
+              placeholder="Search products..."
+              className="me-2 rounded-pill"
               aria-label="Search"
               value={searchQuery}
-              onChange={e=>{setSearchQuery(e.target.value)}}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button variant="outline-success" onClick={handleSearch}>Search</Button>
+            <Button variant="outline-light" type="submit" className="rounded-pill">Search</Button>
           </Form>
+
+          {/* User Authentication & Cart Badge */}
+          <Nav className="ms-auto d-flex align-items-center">
+            {isAuthenticated && (
+              <Nav.Link href="/cart" className="text-light d-flex align-items-center" onClick={handleCartClick}>
+              <i className="bi bi-cart2" ></i>
+              {!isEmpty && (
+                <Badge pill bg="danger" >
+                  {totalUniqueItems}
+                </Badge>
+              )}
+            </Nav.Link>
+            
+            )}
+
+            {isAuthenticated ? (
+              <NavDropdown title={currentUser?.email || 'User'} id="user-nav-dropdown" className="text-light">
+                <NavDropdown.Item onClick={() => navigate('/profile')}>Profile</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => navigate('/orders')}>My Orders</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <Button
+                variant="outline-light"
+                className="rounded-pill ms-2"
+                onClick={() => navigate('/signIn')}
+              >
+                Sign In
+              </Button>
+            )}
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

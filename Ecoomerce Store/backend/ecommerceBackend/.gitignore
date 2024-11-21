@@ -1,0 +1,13 @@
+# Environment files
+*.env
+
+# SQLite database file
+db.sqlite3
+
+# Django-specific
+*.log
+*.pot
+*.pyc
+__pycache__
+/media
+

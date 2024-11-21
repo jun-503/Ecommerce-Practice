@@ -82,7 +82,7 @@ const SignInForm = () => {
                     </Form>
                     <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <p>Create New Account?</p>
-                        <Link to="/" style={{ textDecoration: 'none', color: 'red' }}>Sign Up</Link>
+                        <Link to="/signup" style={{ textDecoration: 'none', color: 'red' }}>Sign Up</Link>
                     </div>
                 </Card.Body>
             </Card>

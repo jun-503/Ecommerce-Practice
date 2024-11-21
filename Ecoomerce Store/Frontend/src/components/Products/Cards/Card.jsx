@@ -2,14 +2,15 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
+import './card.css'
 
 function CardTemplate({ img, price, title,pid ,name}) {
-  const apiUrl = import.meta.env.VITE_API_URL; 'http://127.0.0.1:8000/';
+  // const apiUrl = import.meta.env.VITE_API_URL; 'http://127.0.0.1:8000/';
   
   return (
-    <Card style={{ width: '18rem' }} className='p-0 overflow-hidden h-100 shadow'>
+    <Card style={{ width: '16rem' }} className='p-0 overflow-hidden h-100 shadow'>
       <div className='overflow-hidden rounded p-0 bg-light'>
-        <Card.Img variant="top" src={img ? img : apiUrl+img} />
+        <Card.Img variant="top" src={img} className='card-img-fixed' />
       </div>
       <Card.Body className='text-center'>
       <Card.Title className='display-6'>{name}</Card.Title>

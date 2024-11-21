@@ -5,13 +5,15 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
-// TODO: Add SDKs for Firebase products that you want to use
+//TODO: Add SDKs for Firebase products that you want to use
+
+
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: ""
+  apiKey: "AIzaSyAvZYYeRkgtfrliheK5pgH7foME5HDk3Tk",
   authDomain: "e-commerce-6ad10.firebaseapp.com",
   projectId: "e-commerce-6ad10",
   storageBucket: "e-commerce-6ad10.appspot.com",

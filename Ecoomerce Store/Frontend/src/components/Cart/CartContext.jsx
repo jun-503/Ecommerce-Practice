@@ -1,18 +1,14 @@
-
 import { CartProvider } from 'react-use-cart';
-import ProductDesc from './ProductDesc';
-
-
+import ProductDesc from '../Products/ProductDesc';
 import Cart from './cart';
 
 function CartContext() {
-    
   return (
-    <CartProvider>
-      
-      <ProductDesc />
+    
+    <div className='container mt-5'>
       <Cart />
-    </CartProvider>
+    </div>
+    
   );
 }
 

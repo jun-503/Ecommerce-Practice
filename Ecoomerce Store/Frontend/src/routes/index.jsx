@@ -12,13 +12,15 @@ import SignInForm from "../components/AuthComponents/SignIn";
 import SignupForm from "../components/AuthComponents/signUp";
 import Protected from "./protected";
 
-import CartContext from '../components/Products/CartContext'
+import CartContext from '../components/Cart/CartContext'
 import { isAuthenticated } from "./helpers";
 
 import ProductPage from "../components/Products/ProductPage";
 import  productsLoader  from "./helpers";
 import Layout from "../components/Main";
 import SearchResults from "../components/Products/search/Search";
+import ProductDesc from "../components/Products/ProductDesc";
+import Checkout from "../components/Checkout/checkout";
 
 
 
@@ -33,11 +35,15 @@ const Router = createBrowserRouter(
       <Route path="signIn" element={<SignInForm />} loader={isAuthenticated}/>
       <Route path="products" element={<ProductPage/>} loader={productsLoader}/>
       <Route path="products/:category" element={<ProductPage />} loader={productsLoader} />
+      
       <Route path="search" element={<SearchResults />} />
     
       <Route element={<Protected />}>
         
-        <Route path='products/product/:id' element={<CartContext />}/>
+        <Route path='products/product/:id' element={<ProductDesc />}/>
+        <Route path="cart" element={<CartContext />} />
+        <Route path="/checkout" element={<Checkout />} />
+
         
 
       </Route>
